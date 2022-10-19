@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Post from './pages/Post/Post';
-import Layout from './components/Layout/Layout';
-import { ContextProvider } from './common/context';
+import Post from '../Posts/Posts';
+import Layout from '../Layout/Layout';
+import { ContextProvider } from '../../common/context';
 
 import './App.css';
 
