@@ -1,24 +1,38 @@
-import logo from './logo.svg';
+import { useState } from "react";
+import Post from './pages/Post/Post';
+import Layout from './components/Layout/Layout';
+import { ContextProvider } from './common/context';
+
 import './App.css';
 
 function App() {
+  // const { lang } = useContext(Context);
+  const [data, setData] = useState('');
+
+  function getInputData(data) {
+    setData(data);
+  }
+  const [lang, setLang] = useState(
+    window.localStorage.getItem("lang")
+      ? window.localStorage.getItem("lang")
+      : "UA"
+  );
+  const changeLang = (currentLang) => {
+    if (currentLang === "UA") {
+      window.localStorage.setItem("lang", "EN");
+    } else {
+      window.localStorage.setItem("lang", "UA");
+    }
+    setLang(window.localStorage.getItem("lang"));
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout>
+      <ContextProvider value={{ lang, changeLang }}>
+     
+      <div>data: {data}</div>
+      <Post getInputData={getInputData} />
+      </ContextProvider>
+    </Layout>
   );
 }
 
