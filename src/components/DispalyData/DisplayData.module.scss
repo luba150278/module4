@@ -1,7 +1,12 @@
 .inputData {
+  margin-bottom: 0;
   padding: 10px 0px;
   font-weight: bold;
   color: rgb(46, 3, 28); 
+  max-width: 300px;
+  &.isPadding{
+    padding: 10px;
+  }
   span {
     color: rgb(25, 25, 56);
     font-weight: normal;

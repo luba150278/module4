@@ -1,9 +1,11 @@
+import cn from "classnames";
 import styles from "./DisplayData.module.scss";
 
-function DisplayData({ inputData }) {
-  return inputData !== "" ? (
-    <p className={styles.inputData}>
-      Your input data: <span>{inputData}</span>
+function DisplayData({ displayData, isPadding }) {
+  //Використовуємо умовний рендерінг
+  return displayData !== "" ? (
+    <p className={cn(styles.inputData, { [styles.isPadding]: isPadding })}>
+      Your input data: <span>{displayData}</span>
     </p>
   ) : null;
 }
