@@ -19,14 +19,12 @@ function Posts() {
 
   return (
     <Layout>
-      <div className="container">
-        <div className="innerContent">
-          <ul className={styles.posts}>
-            {posts.map((item) => (
-              <PostItem item={item} key={item.id} />
-            ))}
-          </ul>
-        </div>
+      <div className="innerContent">
+        <ul className={styles.posts}>
+          {posts.map((item) => (
+            <PostItem item={item} key={item.id} />
+          ))}
+        </ul>
       </div>
     </Layout>
   );

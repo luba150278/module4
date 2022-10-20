@@ -44,22 +44,20 @@ function Post() {
 
   return (
     <Layout>
-      <div className="container">
-        <div className={cn("innerContent", styles.content)}>
-          <Card style={{ width: "300px" }}>
-            <Card.Img
-              variant="top"
-              src="https://picsum.photos/200/300" //Рандомна картинка для фану :-)
-              style={{ height: "250px" }}
-            />
-            <Card.Body>
-              <Card.Title>{postData.title}</Card.Title>
-              <Card.Text>{postData.body}</Card.Text>
-            </Card.Body>
-            <DisplayData displayData={displayData} isPadding />
-            <InputBlock data={data} />
-          </Card>
-        </div>
+      <div className={cn("innerContent", styles.content)}>
+        <Card style={{ width: "300px" }}>
+          <Card.Img
+            variant="top"
+            src="https://picsum.photos/200/300" //Рандомна картинка для фану :-)
+            style={{ height: "250px" }}
+          />
+          <Card.Body>
+            <Card.Title>{postData.title}</Card.Title>
+            <Card.Text>{postData.body}</Card.Text>
+          </Card.Body>
+          <DisplayData displayData={displayData} isPadding />
+          <InputBlock data={data} />
+        </Card>
       </div>
     </Layout>
   );
