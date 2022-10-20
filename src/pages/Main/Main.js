@@ -1,24 +1,18 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
+import content from "../../common/content";
 import Context from "../../common/context";
-//import Layout from "../../components/Layout/Layout";
 import Layout from "../../components/Layout/Layout";
-import Posts from '../Posts/Posts';
 
 function Main() {
-  // const { lang } = useContext(Context);
-   console.log(useContext(Context))
-  const [data, setData] = useState("");
-  function getInputData(data) {
-    setData(data);
-  }
+  const { lang } = useContext(Context);
+  const contentData = content(lang).main;
+
   return (
     <Layout>
-      <div><code>&lt;BrowserRouter&gt;&lt;Routes&gt;
-      &lt;Route path="/" element=&lcub;&lt;Main /&gt;&rcub; /&gt;
-      &lt;Route element=&lcub;&lt;NotFound/&gt;&rcub; path="*" /&gt;
-      &lt;/Routes&gt;
-      &lt;/BrowserRouter&gt;</code></div>
-      {/* <Posts getInputData={getInputData} /> */}
+      <div className="innerContent">
+        <h1>{contentData.title}</h1>
+        <p>{contentData.content}</p>
+      </div>
     </Layout>
   );
 }

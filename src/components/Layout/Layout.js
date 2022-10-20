@@ -1,43 +1,26 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { ContextProvider } from "../../common/context";
 import cn from "classnames";
+import { useContext } from "react";
+import content from "../../common/content";
+import Context from "../../common/context";
+import Header from "../Header/Header";
 import styles from "./Layout.module.scss";
 
+
 function Layout({ children }) {
-  const [lang, setLang] = useState(
-    window.localStorage.getItem("lang")
-      ? window.localStorage.getItem("lang")
-      : "UA"
-  );
-  //console.log(lang)
-  const changeLang = (currentLang) => {
-    if (currentLang === "UA") {
-      window.localStorage.setItem("lang", "EN");
-    } else {
-      window.localStorage.setItem("lang", "UA");
-    }
-    setLang(window.localStorage.getItem("lang"));
-  };
+  const { lang } = useContext(Context);
+  const footerData = content(lang).footer;
   return (
-    <ContextProvider value={{ lang, changeLang }}>
-      <header>
-        <div className="container">
-          <div className={cn(styles["header-wrap"], styles.wrap)}>
-            <Link to="/">Home</Link>
-            <Link to="*">Not Found</Link>
-          </div>
-        </div>
-      </header>
+    <div className={styles.body}>
+      <Header />
       <section>
         <div className="container">{children}</div>
       </section>
       <footer>
         <div className="container">
-          <div className={cn(styles["footer-wrap"], styles.wrap) }>footer</div>
+          <div className={cn(styles["footer-wrap"], styles.wrap) }>{footerData}</div>
         </div>
       </footer>
-    </ContextProvider>
+    </div>
   );
 }
 

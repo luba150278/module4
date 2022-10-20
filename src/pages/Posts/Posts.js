@@ -1,18 +1,17 @@
-import { useEffect, useState, useRef, useContext } from "react";
+import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 import axios from "axios";
-
 import Layout from "../../components/Layout/Layout";
-import Context from "../../common/context";
+import cn from "classnames";
+import styles from "./Posts.module.scss";
+import InputBlock from "../../components/InputBlock/InputBlock";
+import DisplayData from "../../components/DispalyData/DisplayData";
 
-function Posts({ getInputData }) {
-  console.log(useContext(Context));
-  //const { lang, changeLang } = useContext(Context);
+function Posts() {
   const [posts, setPosts] = useState([]);
   const [inputData, setInputData] = useState("");
-  const ref = useRef(null);
-
-  function changeHandler() {
-    setInputData(ref.current.value);
+  function getInputData(data) {
+    setInputData(data);
   }
 
   useEffect(() => {
@@ -20,22 +19,23 @@ function Posts({ getInputData }) {
       const response = await axios.get(
         "https://jsonplaceholder.typicode.com/posts"
       );
-      setPosts(response.data);
+      setPosts(response.data.slice(0, 20));
     }
     getPosts();
   }, []);
+
   return (
     <Layout>
       <div className="container">
-        {/* <button onClick={() => changeLang(lang)}>{lang}</button> */}
-
-        <div>
-          <input ref={ref} onChange={() => changeHandler()} />
-          <button onClick={() => getInputData(inputData)}>getData</button>
-          <ul>
+        <div className="innerContent">
+          <ul className={styles.posts}>
             {posts.map((item, i) => (
-              <li key={item.id}>
-                {i + 1}. {item.title}
+              <li key={item.id} className={cn("card", styles.card)}>
+                <Link to={`/post/${item.id}`} >
+                  {item.title}
+                </Link>
+                <DisplayData inputData={inputData} />
+                <InputBlock getInputData={getInputData} />
               </li>
             ))}
           </ul>

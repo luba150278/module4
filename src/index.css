@@ -18,7 +18,11 @@ code {
 }
 ul{
   list-style: none;
+  padding-left: 0;
 }
 header, footer{
   background: rgb(245, 237, 237);
+}
+.innerContent{
+  padding: 40px 0;
 }
