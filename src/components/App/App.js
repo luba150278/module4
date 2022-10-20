@@ -1,38 +1,18 @@
-import { useState } from "react";
-import Post from '../Posts/Posts';
-import Layout from '../Layout/Layout';
-import { ContextProvider } from '../../common/context';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Main from "../../pages/Main/Main";
+import Posts from "../../pages/Posts/Posts";
+import NotFound from "../../pages/NotFound/NotFound";
 
-import './App.css';
 
 function App() {
-  // const { lang } = useContext(Context);
-  const [data, setData] = useState('');
-
-  function getInputData(data) {
-    setData(data);
-  }
-  const [lang, setLang] = useState(
-    window.localStorage.getItem("lang")
-      ? window.localStorage.getItem("lang")
-      : "UA"
-  );
-  const changeLang = (currentLang) => {
-    if (currentLang === "UA") {
-      window.localStorage.setItem("lang", "EN");
-    } else {
-      window.localStorage.setItem("lang", "UA");
-    }
-    setLang(window.localStorage.getItem("lang"));
-  };
   return (
-    <Layout>
-      <ContextProvider value={{ lang, changeLang }}>
-     
-      <div>data: {data}</div>
-      <Post getInputData={getInputData} />
-      </ContextProvider>
-    </Layout>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/posts" element={<Posts />} />
+        <Route element={<NotFound/>} path="*" />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
