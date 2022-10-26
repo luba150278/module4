@@ -3,6 +3,7 @@ import { useContext } from "react";
 import content from "../../common/content";
 import Context from "../../common/context";
 import Layout from "../../components/Layout/Layout";
+import Data from "../../components/CheckTypes/Data";
 
 function Main() {
   // Приймаємо глобальне значення lang за допомогою хука useContext
@@ -16,6 +17,7 @@ function Main() {
         <h1>{contentData.title}</h1>
         <p>{contentData.content}</p>
       </div>
+      <Data />
     </Layout>
   );
 }
