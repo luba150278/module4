@@ -10,6 +10,7 @@ import DisplayData from "../../components/DispalyData/DisplayData";
 import styles from "./Post.module.scss";
 
 function Post() {
+  const URL = process.env.REACT_APP_URL;
   const id = useParams().id || ""; //Функція бібліотеки react-router-dom, яка дозволяє отримувати параметри (id ы нашому випадку) з дінамічного URL
 
   //Звертаємося за данними про пост на сервер за допомогою хука useEffect , присвоюємо данні змінній postData
@@ -18,12 +19,12 @@ function Post() {
   useEffect(() => {
     async function getPostData() {
       const response = await axios.get(
-        `https://jsonplaceholder.typicode.com/posts/${id}`
+        `${URL}/${id}`
       );
       setPostData(response.data);
     }
     getPostData();
-  }, [id]);
+  }, [id, URL]);
 
   const ref = useRef(null); //Робимо прив'язку input, який знаходиться в дочірньому компоненті InputBlock до батьківського компонента. Використовуємо хук useRef()
 
