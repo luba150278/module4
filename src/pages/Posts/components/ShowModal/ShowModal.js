@@ -5,6 +5,10 @@ import Form from "react-bootstrap/Form";
 import axios from "axios";
 import styles from "./ShowModal.module.scss";
 
+const useFields = () => {
+  const [value, setValue] = useState('');
+  
+}
 function ShowModal({ show, handleShow, handleClose }) {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
