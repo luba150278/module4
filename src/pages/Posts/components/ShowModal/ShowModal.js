@@ -1,18 +1,24 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import styles from "./ShowModal.module.scss";
 import axios from "axios";
 
+const useFormField = () => {
+  const [value, setValue] = useState('');
+  const onChange = useCallback((e) => setValue(e.target.value), []);
+  return { value, onChange };
+};
+
 function ShowModal({ show, handleClose }) {
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+  const titleField = useFormField();
+  const bodyField = useFormField();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (title === "" && body === "") {
+    if (titleField.value === "" && bodyField.value === "") {
       setError("One or more fields are empty!!!");
       setTimeout(() => {
         setError("");
@@ -20,8 +26,8 @@ function ShowModal({ show, handleClose }) {
       return;
     }
     const res = await axios.post("https://jsonplaceholder.typicode.com/posts", {
-      title,
-      body,
+      title: titleField.value,
+      body: bodyField.value,
       userId: 1,
     });
     if (res.status === 201) {
@@ -46,8 +52,7 @@ function ShowModal({ show, handleClose }) {
             <Form.Control
               type="text"
               placeholder="Your title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              {...titleField}
             />
           </Form.Group>
 
@@ -56,8 +61,7 @@ function ShowModal({ show, handleClose }) {
             <Form.Control
               as="textarea"
               rows={5}
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
+              {...bodyField}
             />
           </Form.Group>
           <Button variant="primary" type="submit">
