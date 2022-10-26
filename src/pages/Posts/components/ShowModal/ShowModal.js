@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import styles from "./ShowModal.modal.scss";
+import styles from "./ShowModal.module.scss";
 
 function ShowModal({ show, handleShow, handleClose }) {
   const [title, setTitle] = useState("");
@@ -15,17 +15,39 @@ function ShowModal({ show, handleShow, handleClose }) {
     e.preventDefault();
     // console.log(title, text);
     if (title !== "" && text !== "") {
-      const res = await axios.post(URL, { title, body: text, userId: 1 });
-      if (res.status === 201) {
-        setSuccess("Ok, post was created!!!");
+      try {
+        const res = await axios.post(URL + "sdfsd", {
+          title,
+          body: text,
+          userId: 1,
+        });
+        if (res.status === 201) {
+          setSuccess("Ok, post was created!!!");
+          setTimeout(() => {
+            setSuccess("");
+            handleClose();
+          }, 3000);
 
+          return;
+        }
+        setError("Server Error!!!");
+        setTimeout(() => {
+          setError("");
+        }, 3000);
+        return;
+      } catch (e) {
+        setError("Server Error!!!");
+        setTimeout(() => {
+          setError("");
+        }, 3000);
         return;
       }
-      setError("Server Error!!!");
-      return;
     }
 
     setError("Empty values!!!");
+    setTimeout(() => {
+      setError("");
+    }, 3000);
   };
   return (
     <Modal show={show} onHide={handleClose}>
