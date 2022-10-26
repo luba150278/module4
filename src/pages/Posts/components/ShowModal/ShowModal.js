@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
@@ -7,18 +7,19 @@ import styles from "./ShowModal.module.scss";
 
 const useFields = () => {
   const [value, setValue] = useState('');
-  
+  const onChange = useCallback((e) => setValue(e.target.value), []);
+  return { value, onChange };  
 }
 function ShowModal({ show, handleShow, handleClose }) {
-  const [title, setTitle] = useState("");
-  const [text, setText] = useState("");
+  const title = useFields();
+  const text = useFields();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const URL = process.env.REACT_APP_URL;
   const handlerSubmit = async (e) => {
     e.preventDefault();
     // console.log(title, text);
-    if (title !== "" && text !== "") {
+    if (title.value !== "" && text.value !== "") {
       try {
         const res = await axios.post(URL + "sdfsd", {
           title,
@@ -67,7 +68,7 @@ function ShowModal({ show, handleShow, handleClose }) {
             <Form.Control
               type="text"
               placeholder="Enter title"
-              onChange={(e) => setTitle(e.target.value)}
+             {...title}
             />
           </Form.Group>
 
@@ -78,7 +79,7 @@ function ShowModal({ show, handleShow, handleClose }) {
               placeholder="Write your post"
               style={{ height: "100px" }}
               row={5}
-              onChange={(e) => setText(e.target.value)}
+              {...text}
             />
           </Form.Group>
 
