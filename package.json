@@ -10,7 +10,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.2",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "styled-components": "^5.3.6"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -38,8 +39,8 @@
   },
   "devDependencies": {
     "bootstrap": "^5.2.2",
+    "classnames": "^2.3.2",
     "react-bootstrap": "^2.5.0",
-    "sass": "^1.55.0",
-    "classnames": "^2.3.2"
+    "sass": "^1.55.0"
   }
 }

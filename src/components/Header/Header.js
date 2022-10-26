@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 
 import Context from "../../common/context";
 import content from "../../common/content";
-import styles from "./Header.module.scss";
+import { Wrap, Menu, Switch } from './Header.styles';
 
 function Header() {
   // Приймаємо глобальні значення lang, changeLang  за допомогою хука useContext
@@ -15,16 +15,16 @@ function Header() {
   return (
     <header>
       <div className="container">
-        <div className={styles.wrap}>
-          <div className={styles.menu}>
+        <Wrap>
+          <Menu>
             {menu.map((item, i) => (
               //функція бібліотеки react-router-dom для навігації (не використовуємо для цього <a></a> !!! )
               <Link to={item.link} key={`${item.title}-${i}`}>
                 {item.title}
               </Link>
             ))}
-          </div>
-          <div className={styles.switch}>
+          </Menu>
+          <Switch>
             UA
             <Form.Check
               type="switch"
@@ -32,8 +32,8 @@ function Header() {
               onChange={() => changeLang(lang)} //Відстежуємо зміну мови по зміні положення світчера
             />
             EN
-          </div>
-        </div>
+          </Switch>
+        </Wrap>
       </div>
     </header>
   );
