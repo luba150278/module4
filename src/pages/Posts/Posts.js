@@ -8,16 +8,16 @@ import { Button } from "react-bootstrap";
 
 function Posts() {
   //Звертаємося за данними про пост на сервер за допомогою хука useEffect, присвоюємо данні змінній posts
+  const URL = process.env.REACT_APP_URL;
+  console.log(URL)
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     async function getPosts() {
-      const response = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts"
-      );
+      const response = await axios.get(URL);
       setPosts(response.data.slice(0, 20));
     }
     getPosts();
-  }, []);
+  }, [URL]);
 
   const [show, setShow] = useState(false);
 
@@ -26,7 +26,14 @@ function Posts() {
   return (
     <Layout>
       <div className="innerContent">
-        <Button onClick={()=>{handleShow()}} variant="primary">Add new post</Button>
+        <Button
+          onClick={() => {
+            handleShow();
+          }}
+          variant="primary"
+        >
+          Add new post
+        </Button>
         <ShowModal show={show} handleClose={handleClose} />
         <ul className={styles.posts}>
           {posts.map((item) => (
