@@ -27,7 +27,7 @@ function Posts() {
     <Layout>
       <div className="innerContent">
         <Button onClick={()=>{handleShow()}} variant="primary">Add new post</Button>
-        <ShowModal show={show} handleShow={handleShow} handleClose={handleClose} />
+        <ShowModal show={show} handleClose={handleClose} />
         <ul className={styles.posts}>
           {posts.map((item) => (
             <PostItem item={item} key={item.id} />
