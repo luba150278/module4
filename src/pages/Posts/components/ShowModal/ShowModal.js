@@ -10,7 +10,6 @@ const SUCCESS = "Post was successfully created";
 
 const initialState = { error: "", success: "" };
 
-
 function reducer(state, action) {
   switch (action.type) {
     case "error":
@@ -45,23 +44,24 @@ function ShowModal({ show, handleClose }) {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (titleField.value === "" || bodyField.value === "") {
-      wait("error", ERROR);
-      return;
-    }
-
     try {
-      const res = await axios.post(URL + 'sas', {
+      e.preventDefault();
+      if (titleField.value === "" || bodyField.value === "") {
+        wait("error", ERROR);
+        return;
+      }
+
+      const res = await axios.post(URL + "sas", {
         title: titleField.value,
         body: bodyField.value,
         userId: 1,
       });
+      console.log(res)
       if (res.status === 201) {
         wait("success", SUCCESS);
       }
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   };
 
