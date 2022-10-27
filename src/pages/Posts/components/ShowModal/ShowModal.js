@@ -1,45 +1,27 @@
 import { useState, useCallback, useReducer } from "react";
+import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import axios from "axios";
+
 import styles from "./ShowModal.module.scss";
+import { initialState, reducer } from "./reducer"; //початкові значення та функція, яку передаємо в useReducer
+import { ERROR, SUCCESS, SERVER_ERR } from "./formMessages.constants"; //повідомлення для користувача
 
-const URL = process.env.REACT_APP_URL;
-const ERROR = "Empty values!!!";
-const SUCCESS = "Ok, post was created!!!";
-const SERVER = "Server Error!!!";
-
-const useFields = () => {
+//Хук для керування полями форми
+const useFormField = () => {
   const [value, setValue] = useState("");
   const onChange = useCallback((e) => setValue(e.target.value), []);
   return { value, onChange };
 };
 
-const initialState = { error: "", success: "", server: "" };
+function ShowModal({ show, handleClose }) {
+  const URL = process.env.REACT_APP_URL;
+  const titleField = useFormField();
+  const bodyField = useFormField();
+  const [message, dispatch] = useReducer(reducer, initialState); //використовуюмо вбудований хук для відображення повідомлень на формі
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "error":
-      return { ...state, error: action.payload };
-    case "server":
-      return { ...state, server: action.payload };
-    case "success":
-      return { ...state, success: action.payload };
-    case "initial":
-      return { ...state, ...initialState };
-    default:
-      throw new Error();
-  }
-}
-
-function ShowModal({ show, handleShow, handleClose }) {
-  const title = useFields();
-  const text = useFields();
-
-  const [message, dispatch] = useReducer(reducer, initialState);
-
-  
+  //Функція  для звертання до редьюсера та відображення, а потім приховання повідомлень
   function wait(type, payload) {
     dispatch({ type, payload });
     setTimeout(() => {
@@ -47,53 +29,55 @@ function ShowModal({ show, handleShow, handleClose }) {
       if (type === "success") handleClose();
     }, 3000);
   }
-  const handlerSubmit = async (e) => {
-    e.preventDefault();
-    if (title.value !== "" && text.value !== "") {
-      try {
-        const res = await axios.post(URL, {
-          title,
-          body: text,
-          userId: 1,
-        });
-        if (res.status === 201) {
-          wait('success', SUCCESS)
-          return;
-        }
-        wait('server', SERVER)
-        return;
-      } catch (e) {
-        wait('server', SERVER);
+
+  //обробка відправки данних з форми на сервер
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      if (titleField.value === "" || bodyField.value === "") {
+        wait("error", ERROR);
         return;
       }
+
+      const res = await axios.post(URL, {
+        title: titleField.value,
+        body: bodyField.value,
+        userId: 1,
+      });
+      if (res.status === 201) {
+        wait("success", SUCCESS);
+      }
+    } catch (err) {
+      wait("error", SERVER_ERR);
     }
-    wait('error', ERROR)
   };
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>Add new post</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {message.error !== "" ? <p className={styles.error}>{message.error}</p> : null}
-        {message.success !== "" ? <p className={styles.success}>{message.success}</p> : null}
-        <Form onSubmit={handlerSubmit}>
+        {message.error !== "" ? (
+          <p className={styles.error}>{message.error}</p>
+        ) : null}
+        {message.success !== "" ? (
+          <p className={styles.success}>{message.success}</p>
+        ) : null}
+        <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Post title</Form.Label>
-            <Form.Control type="text" placeholder="Enter title" {...title} />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Your post</Form.Label>
             <Form.Control
-              as="textarea"
-              placeholder="Write your post"
-              style={{ height: "100px" }}
-              row={5}
-              {...text}
+              type="text"
+              placeholder="Your title"
+              {...titleField}
             />
           </Form.Group>
 
+          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+            <Form.Label>Post body</Form.Label>
+            <Form.Control as="textarea" rows={5} {...bodyField} />
+          </Form.Group>
           <Button variant="primary" type="submit">
             Submit
           </Button>
