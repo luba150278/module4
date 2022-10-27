@@ -50,13 +50,18 @@ function ShowModal({ show, handleClose }) {
       wait("error", ERROR);
       return;
     }
-    const res = await axios.post(URL, {
-      title: titleField.value,
-      body: bodyField.value,
-      userId: 1,
-    });
-    if (res.status === 201) {
-      wait("success", SUCCESS);
+
+    try {
+      const res = await axios.post(URL + 'sas', {
+        title: titleField.value,
+        body: bodyField.value,
+        userId: 1,
+      });
+      if (res.status === 201) {
+        wait("success", SUCCESS);
+      }
+    } catch (err) {
+      console.log(err)
     }
   };
 
