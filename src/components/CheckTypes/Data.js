@@ -1,14 +1,19 @@
 import { string, arrayOf, number} from 'prop-types';
-function Data({ title, body, arr }) {
+import { Link } from 'react-router-dom';
+function Data({ link, message }) {
   return (
     <div>
-      <h2>{title}</h2>
+      {/* <h2>{title}</h2>
       <p>{body}</p>
       <ul>
         {arr.map((item) => (
           <li key={item}>{item}</li>
         ))}
-      </ul>
+      </ul> */}
+      <Link to={link}>posts</Link>
+      <h1>{message.title }</h1>
+      <p>{ message.body}</p>
+
     </div>
   );
 }
@@ -18,11 +23,11 @@ Data.defaultProps = {
   body: '',
   arr: [],
 }
-Data.propTypes = {
-  title: string.isRequired,
-  body: string.isRequired,
-  arr: arrayOf(number).isRequired
-}
+// Data.propTypes = {
+//   title: string.isRequired,
+//   body: string.isRequired,
+//   arr: arrayOf(number).isRequired
+// }
 
 export default Data;
 

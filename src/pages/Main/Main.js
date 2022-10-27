@@ -10,14 +10,20 @@ function Main() {
   const { lang } = useContext(Context);
   // Отримуємо конент для сторінки в залежності від мови
   const contentData = content(lang).main;
-
+  
+  const link = '/posts';
+  const message = {
+    title: 'dadasd',
+    body: 'sdasdas'
+  }
+  
   return (
     <Layout>
       <div className="innerContent">
         <h1>{contentData.title}</h1>
         <p>{contentData.content}</p>
       </div>
-      <Data />
+      <Data link={link} message={message} />
     </Layout>
   );
 }
