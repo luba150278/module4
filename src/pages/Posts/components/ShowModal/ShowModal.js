@@ -1,28 +1,14 @@
 import { useState, useCallback, useReducer } from "react";
+import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
+
 import styles from "./ShowModal.module.scss";
-import axios from "axios";
+import { initialState, reducer } from "./reducer"; //початкові значення та функція, яку передаємо в useReducer
+import { ERROR, SUCCESS, SERVER_ERR } from "./formMessages.constants"; //повідомлення для користувача
 
-const ERROR = "One or more fields are empty!!!";
-const SUCCESS = "Post was successfully created";
-
-const initialState = { error: "", success: "" };
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "error":
-      return { ...state, error: action.payload };
-    case "success":
-      return { ...state, success: action.payload };
-    case "initial":
-      return { ...state, ...initialState };
-    default:
-      throw new Error();
-  }
-}
-
+//Хук для керування полями форми
 const useFormField = () => {
   const [value, setValue] = useState("");
   const onChange = useCallback((e) => setValue(e.target.value), []);
@@ -33,8 +19,9 @@ function ShowModal({ show, handleClose }) {
   const URL = process.env.REACT_APP_URL;
   const titleField = useFormField();
   const bodyField = useFormField();
-  const [message, dispatch] = useReducer(reducer, initialState);
+  const [message, dispatch] = useReducer(reducer, initialState); //використовуюмо вбудований хук для відображення повідомлень на формі
 
+  //Функція  для звертання до редьюсера та відображення, а потім приховання повідомлень
   function wait(type, payload) {
     dispatch({ type, payload });
     setTimeout(() => {
@@ -43,6 +30,7 @@ function ShowModal({ show, handleClose }) {
     }, 3000);
   }
 
+  //обробка відправки данних з форми на сервер
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -51,17 +39,16 @@ function ShowModal({ show, handleClose }) {
         return;
       }
 
-      const res = await axios.post(URL + "sas", {
+      const res = await axios.post(URL, {
         title: titleField.value,
         body: bodyField.value,
         userId: 1,
       });
-      console.log(res)
       if (res.status === 201) {
         wait("success", SUCCESS);
       }
     } catch (err) {
-      console.log(err);
+      wait("error", SERVER_ERR);
     }
   };
 
