@@ -12,10 +12,9 @@ function Main() {
   const contentData = content(lang).main;
   
   const link = '/posts';
-  const message = {
-    title: 'dadasd',
-    body: 'sdasdas'
-  }
+  const body = 'А ці данні ідуть з батька';
+  const arr = [1,2,3,4]
+  
   
   return (
     <Layout>
@@ -23,7 +22,7 @@ function Main() {
         <h1>{contentData.title}</h1>
         <p>{contentData.content}</p>
       </div>
-      <Data link={link} message={message} />
+      <Data link={link} body={body} arr={arr} />
     </Layout>
   );
 }

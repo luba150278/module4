@@ -1,61 +1,32 @@
-import { string, arrayOf, number} from 'prop-types';
-import { Link } from 'react-router-dom';
-function Data({ link, message }) {
+import { string, arrayOf, number } from "prop-types";
+import { Link } from "react-router-dom";
+function Data({ link, title, body, arr }) {
   return (
     <div>
-      {/* <h2>{title}</h2>
+      <h2>Демо роботи з PropTypes, та створення посилань на сторінки</h2>
+      <h3>{title}</h3>
       <p>{body}</p>
       <ul>
         {arr.map((item) => (
           <li key={item}>{item}</li>
         ))}
-      </ul> */}
+      </ul>
+      <p>Посилання на сторінку постів</p>
       <Link to={link}>posts</Link>
-      <h1>{message.title }</h1>
-      <p>{ message.body}</p>
-
     </div>
   );
 }
 
 Data.defaultProps = {
-  title: '',
-  body: '',
+  title: "Заголовок по замовчуванню",
+  body: "",
   arr: [],
-}
-// Data.propTypes = {
-//   title: string.isRequired,
-//   body: string.isRequired,
-//   arr: arrayOf(number).isRequired
-// }
+};
+Data.propTypes = {
+  title: string.isRequired,
+  body: string.isRequired,
+  arr: arrayOf(number).isRequired,
+  link: string,
+};
 
 export default Data;
-
-
-// import PropTypes from "prop-types";
-
-// function Data({ title, body, arr }) {
-//   return (
-//     <div className="container">
-//       <h2>{title}</h2>
-//       <p>{body}</p>
-//       <ul>
-//         {arr.map((item) => (
-//           <li key={item}>{item}</li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
-
-
-// Data.defaultProps = {
-//   title: "Незнакомец",
-//   arr2: []
-// };
-// Data.propTypes = {
-//   title: PropTypes.string.isRequired,
-//   body: PropTypes.string,
-//   arr: PropTypes.arrayOf(PropTypes.number),
-//   arr2: PropTypes.arrayOf(PropTypes.number).isRequired,
-// };
