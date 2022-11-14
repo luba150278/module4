@@ -1,4 +1,4 @@
-import { useState, useCallback, useReducer, Component } from "react";
+import { useReducer, Component } from "react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -8,58 +8,56 @@ import styles from "./ShowModal.module.scss";
 import { initialState, reducer } from "./reducer"; //початкові значення та функція, яку передаємо в useReducer
 import { ERROR, SUCCESS, SERVER_ERR } from "./formMessages.constants"; //повідомлення для користувача
 
+const withUseReducer =
+  (...useReducerArgs) =>
+  (Component) =>
+  (props) => {
+    const [message, dispatch] = useReducer(...useReducerArgs);
 
-const withUseReducer = (...useReducerArgs) => Component => props => {
-  const [state, dispatch] = useReducer(...useReducerArgs);
-
-  return <Component {...props} {...{ state, dispatch }} />;
-};
-//Хук для керування полями форми
-const useFormField = () => {
-  const [value, setValue] = useState("");
-  const onChange = useCallback((e) => setValue(e.target.value), []);
-  return { value, onChange };
-};
+    return <Component {...props} {...{ message, dispatch }} />;
+  };
 
 class ShowModal extends Component {
-  // const URL = process.env.REACT_APP_URL;
-  // const titleField = useFormField();
-  // const bodyField = useFormField();
-  // const [message, dispatch] = useReducer(reducer, initialState); //використовуюмо вбудований хук для відображення повідомлень на формі
+  state = {
+    title: "",
+    body: "",
+  };
 
-  // //Функція  для звертання до редьюсера та відображення, а потім приховання повідомлень
-  // function wait(type, payload) {
-  //   dispatch({ type, payload });
-  //   setTimeout(() => {
-  //     dispatch({ type: "initial", payload: initialState });
-  //     if (type === "success") handleClose();
-  //   }, 3000);
-  // }
+  wait = (type, payload) => {
+    this.props.dispatch({ type, payload });
+    setTimeout(() => {
+      this.props.dispatch({ type: "initial", payload: initialState });
+      if (type === "success") this.props.handleClose();
+    }, 3000);
+  };
 
-  // //обробка відправки данних з форми на сервер
-  // const handleSubmit = async (e) => {
-  //   try {
-  //     e.preventDefault();
-  //     if (titleField.value === "" || bodyField.value === "") {
-  //       wait("error", ERROR);
-  //       return;
-  //     }
+  //обробка відправки данних з форми на сервер
+  handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      console.log(this.state.title, this.state.body);
+      if (this.state.title === "" || this.state.body === "") {
+        this.wait("error", ERROR);
+        return;
+      }
 
-  //     const res = await axios.post(URL, {
-  //       title: titleField.value,
-  //       body: bodyField.value,
-  //       userId: 1,
-  //     });
-  //     if (res.status === 201) {
-  //       wait("success", SUCCESS);
-  //     }
-  //   } catch (err) {
-  //     wait("error", SERVER_ERR);
-  //   }
-  // };
+      const URL = process.env.REACT_APP_URL;
+      const res = await axios.post(URL, {
+        title: this.state.title,
+        body: this.state.body,
+        userId: 1,
+      });
+      if (res.status === 201) {
+        this.wait("success", SUCCESS);
+        this.setState({ title: "", body: "" });
+      }
+    } catch (err) {
+      this.wait("error", SERVER_ERR);
+    }
+  };
 
-  render(){
-    const { show, handleClose } = this.props;
+  render() {
+    const { show, handleClose, message } = this.props;
     return (
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -72,19 +70,28 @@ class ShowModal extends Component {
           {message.success !== "" ? (
             <p className={styles.success}>{message.success}</p>
           ) : null}
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={(e) => this.handleSubmit(e)}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Post title</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Your title"
-                {...titleField}
+                value={this.title}
+                onChange={(e) => this.setState({ title: e.target.value })}
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+            <Form.Group
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
+            >
               <Form.Label>Post body</Form.Label>
-              <Form.Control as="textarea" rows={5} {...bodyField} />
+              <Form.Control
+                as="textarea"
+                rows={5}
+                value={this.body}
+                onChange={(e) => this.setState({ body: e.target.value })}
+              />
             </Form.Group>
             <Button variant="primary" type="submit">
               Submit
