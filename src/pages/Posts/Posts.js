@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Component } from "react";
 import axios from "axios";
 import Layout from "../../components/Layout/Layout";
 import styles from "./Posts.module.scss";
@@ -6,37 +6,60 @@ import PostItem from "./components/PostItem/PostItem";
 import { Button } from "react-bootstrap";
 import ShowModal from "../../components/ShowModal/ShowModal";
 
-function Posts() {
-  //Звертаємося за данними про пост на сервер за допомогою хука useEffect, присвоюємо данні змінній posts
-  const URL = process.env.REACT_APP_URL;
-  const [posts, setPosts] = useState([]);
-  useEffect(() => {
-    async function getPosts() {
-      const response = await axios.get(
-        URL
-      );
-      setPosts(response.data.slice(0, 20));
+class Posts extends Component {
+  //state = { posts: [], show: false };
+  constructor(props) {
+    super(props);
+    // Не вызывайте здесь this.setState()!
+    this.state = { posts: [], show: false };
+    // this.handleClose = this.handleClose.bind(this);
+    // this.handleShow = this.handleClose.bind(this);
+  }
+
+  componentDidMount() {
+    this.mounted = true;
+    const URL = process.env.REACT_APP_URL;
+    const posts = async () => {
+      const res = await axios.get(URL);
+      this.setState({ posts: res.data.slice(0, 20) });
     }
-    getPosts();
-  }, [URL]);
+    posts();
+  }
 
-  const [show, setShow] = useState(false);
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  return (
-    <Layout>
-      <div className="innerContent">
-        <Button onClick={()=>{handleShow()}} variant="primary">Add new post</Button>
-        <ShowModal show={show} handleShow={handleShow} handleClose={handleClose} />
-        <ul className={styles.posts}>
-          {posts.map((item) => (
-            <PostItem item={item} key={item.id} />
-          ))}
-        </ul>
-      </div>
-    </Layout>
-  );
+  handleClose = () => this.setState({ show: false });
+  handleShow = () => this.setState({ show: true });
+
+  render() {
+    const { show, posts } = this.state;
+    return (
+      <Layout>
+        <div className="innerContent">
+          <Button
+            onClick={() => {
+              this.handleShow();
+            }}
+            variant="primary"
+          >
+            Add new post
+          </Button>
+          <ShowModal
+            show={show}
+            handleShow={this.handleShow}
+            handleClose={this.handleClose}
+          />
+          <ul className={styles.posts}>
+            {posts.map((item) => (
+              <PostItem item={item} key={item.id} />
+            ))}
+          </ul>
+        </div>
+      </Layout>
+    );
+  }
 }
 
 export default Posts;
