@@ -3,8 +3,8 @@ import axios from "axios";
 import Layout from "../../components/Layout/Layout";
 import styles from "./Posts.module.scss";
 import PostItem from "./components/PostItem/PostItem";
-import ShowModal from "./components/ShowModal/ShowModal";
 import { Button } from "react-bootstrap";
+import ShowModal from "../../components/ShowModal/ShowModal";
 
 function Posts() {
   //Звертаємося за данними про пост на сервер за допомогою хука useEffect, присвоюємо данні змінній posts
