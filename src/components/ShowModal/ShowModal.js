@@ -1,32 +1,27 @@
-import { useReducer, Component } from "react";
+import { Component } from "react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 
 import styles from "./ShowModal.module.scss";
-import { initialState, reducer } from "./reducer"; //початкові значення та функція, яку передаємо в useReducer
 import { ERROR, SUCCESS, SERVER_ERR } from "./formMessages.constants"; //повідомлення для користувача
-
-const withUseReducer =
-  (...useReducerArgs) =>
-  (Component) =>
-  (props) => {
-    const [message, dispatch] = useReducer(...useReducerArgs);
-
-    return <Component {...props} {...{ message, dispatch }} />;
-  };
 
 class ShowModal extends Component {
   state = {
     title: "",
     body: "",
+    message: { error: "", success: "" },
   };
 
   wait = (type, payload) => {
-    this.props.dispatch({ type, payload });
+    if (type === "success") {
+      this.setState({ message: { success: payload } });
+    } else {
+      this.setState({ message: { error: payload } });
+    }
     setTimeout(() => {
-      this.props.dispatch({ type: "initial", payload: initialState });
+      this.setState({ message: { success: "", error: "" } });
       if (type === "success") this.props.handleClose();
     }, 3000);
   };
@@ -35,7 +30,6 @@ class ShowModal extends Component {
   handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      console.log(this.state.title, this.state.body);
       if (this.state.title === "" || this.state.body === "") {
         this.wait("error", ERROR);
         return;
@@ -57,7 +51,8 @@ class ShowModal extends Component {
   };
 
   render() {
-    const { show, handleClose, message } = this.props;
+    const { show, handleClose } = this.props;
+    const { message } = this.state;
     return (
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -103,4 +98,4 @@ class ShowModal extends Component {
   }
 }
 
-export default withUseReducer(reducer, initialState)(ShowModal);
+export default ShowModal;
